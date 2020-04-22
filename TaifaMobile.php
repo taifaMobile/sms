@@ -20,7 +20,7 @@ class TaifaMobile
 
 	public function curl_function($data, $end_point)
 	{
-		$url = "http://sms.taifamobile.co.ke/clientapi/" . $end_point . "/";
+		$url = "https://sms.taifamobile.co.ke/clientapi/" . $end_point . "/";
 		$content = json_encode($data);
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_HEADER, false);
