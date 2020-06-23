@@ -16,6 +16,7 @@ require_once('PATH_TO_TAIFA_MOBILE_LIBRARY/TaifaMobile.php');
 
 $tm = new TaifaMobile();
 $message = "Lorem Ipsum is simply dummy text of the printing....";
+
 //------ Generate the APIKey from the webapp > Settings > APIKey.
 //------ Your API Key is private and confidential
 //------ Replace YOUR_GENERATED_API_KEY with the key you have generated
@@ -25,7 +26,7 @@ $apiKey = "YOUR_GENERATED_API_KEY";
 $recepients = "07XXXXXXXX";
 
 //------ Sending out bulk sms
-$recepients = ["07XXXXXXXX", "07YYYYYYYY"];
+$recepients = ["07XXXXXXXX", "07YYYYYYYY", "07ZZZZZZZZ"];
 
 //------ Send the SMS ------
 $response = $tm->send_sms($recepients, $message, $apiKey);
