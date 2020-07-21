@@ -3,11 +3,10 @@
 This document provides a step-by-step process of integrating Taifa Mobile PRSP System into your web application and allow you to push your SMS to a user or a group of users.
 
 ## Installation
-TaifaMobile SMS library will require CURL for it to send data to the server. Please ensure you have it installed. After installing CURL, follow the below steps;
 
-1. Download the [TaifaMobile.php](https://github.com/taifaMobile/sms/blob/master/TaifaMobile.php) file.
+1. Download the [TaifaMobile.php](https://github.com/taifaMobile/sms/blob/master/TaifaMobile.php) file above.
 2. Copy the downloaded file into your project directory.
-3. Follow the code below and make necessary changes to send out an SMS.
+3. Follow the code below to send out an SMS.
 
 ## Usage
 
@@ -16,31 +15,78 @@ require_once('PATH_TO_TAIFA_MOBILE_LIBRARY/TaifaMobile.php');
 
 $tm = new TaifaMobile();
 $message = "Lorem Ipsum is simply dummy text of the printing....";
+$apiKey = "YOUR_GENERATED_API_KEY"; //Generate the API_KEY
+$recepients = "07XXXXXXXX"; //Sending out single sms
+$recepients = ["07XXXXXXXX", "07YYYYYYYY"]; //Sending out bulk sms
 
-//------ Generate the APIKey from the webapp > Settings > APIKey.
-//------ Your API Key is private and confidential
-//------ Replace YOUR_GENERATED_API_KEY with the key you have generated
-$apiKey = "YOUR_GENERATED_API_KEY";
-
-//------ Sending out single sms
-$recepients = "07XXXXXXXX";
-
-//------ Sending out bulk sms
-$recepients = ["07XXXXXXXX", "07YYYYYYYY", "07ZZZZZZZZ"];
-
-//------ Send the SMS ------
+------ Send either single or multiple recepient SMS ------
 $response = $tm->send_sms($recepients, $message, $apiKey);
 
-//------ Send an SMS using a specified service ------
-//------ Replace SERVICE_NAME with the Service Name you registered
-$service_name = "SERVICE_NAME";
+------ Send using a specific service ------
+$service_name = "SERVICE_NAME";//The name of the service to use.
 $response = $tm->send_sms($recepients, $message, $apiKey, $service_name);
 ```
 
 ## Response
-The server will return one of the below responses:
+Below are some of the responses that you will expect from the above function.
+
 - 00 - Success
 - 01 - Failed
 - 97 - No enough funds
 - 98 - Service not found
 - 99 - Missing required details
+
+****************************************************************
+
+## Callbacks
+TaifaMobile allows customers to specify call back URLs where data is sent upon receiving from the partner Telco. This data is sent using POST method and in JSON format.
+
+#### Subscription callback data
+The data below will be received in JSON format whenever a customer subscribes or unsubscribed to registered services.
+
+```php
+{
+    "date":"YYYY-MM-DD HH:MM:SS",
+    "phone_number":"2547XXXXXXXX",
+    "service":{
+        "service_name":"SERVICE_NAME",
+        "keyword":"KEYWORD_USED"
+    },
+    "update_description":"ACTIVATION|DEACTIVATION"
+}
+```
+
+#### Incoming message callback data
+The data below will be received in JSON format whenever an incoming message is received.
+
+```php
+{
+    "message":"Lorem Ipsum...",
+    "phone_number":"2547XXXXXXXX",
+    "link_id":"14101445075801587923",
+    "service":{
+        "service_name":"SERVICE_NAME",
+        "keyword":"KEYWORD_USED"
+    },
+    "message_time":"0000-00-00 00:00:00"
+}
+```
+
+#### Delivery reports callback data
+The data below will be received in JSON format whenever a delivery report is received.
+
+```php
+{
+    "timestamp":"0000-00-00 00:00:00"
+    "phone_number":"2547XXXXXXXX",
+    "message_id":"0001",
+    "status":"STATUS_MESSAGE"
+}
+```
+##### Delivery reports status
+Below are some of the delivery reports status (STATUS_MESSAGE) that you will receive through the API
+- _DeliveredToTerminal_ : Message has been delivered									- _UserNotExist_ : Number does not exist								- _Insufficient_Balance_ : Insufficient funds at user end
+- _DeliveryImpossible_ : Message has expired
+- _sender_ID blacklisted by user_ : Sender ID blocked by the user
+- _Invalid_Linkid_ : Incorrect link ID
+- _DeliveredNotificationNotSupported_ : Notification not supported
