@@ -28,7 +28,17 @@ $response = $tm->send_sms($recepients, $message, $apiKey, $service_name);
 ```
 
 ## Response
-Below are some of the responses that you will expect from the above function.
+The response from the above function will return a JSON string in the below format:
+
+```php
+{
+    "messageId":"b77d7e8e961bc52521ca25baddab068a", //35 characters
+    "status":"00",
+    "statusDescription":"Success",
+}
+```
+
+Below is a list of the status and their respective statusDescription returned in the above function.
 
 - 00 - Success
 - 01 - Failed
@@ -40,6 +50,18 @@ Below are some of the responses that you will expect from the above function.
 
 ## Callbacks
 TaifaMobile allows customers to specify call back URLs where data is sent upon receiving from the partner Telco. This data is sent using POST method and in JSON format.
+
+#### Delivery reports callback data
+The data below will be received in JSON format whenever a delivery report is received.
+
+```php
+{
+    "timestamp":"0000-00-00 00:00:00"
+    "phoneNumber":"2547XXXXXXXX",
+    "messageId":"b77d7e8e961bc52521ca25baddab068a",
+    "status":"STATUS_MESSAGE"
+}
+```
 
 #### Subscription callback data
 The data below will be received in JSON format whenever a customer subscribes or unsubscribed to registered services.
@@ -72,17 +94,6 @@ The data below will be received in JSON format whenever an incoming message is r
 }
 ```
 
-#### Delivery reports callback data
-The data below will be received in JSON format whenever a delivery report is received.
-
-```php
-{
-    "timestamp":"0000-00-00 00:00:00"
-    "phone_number":"2547XXXXXXXX",
-    "message_id":"0001",
-    "status":"STATUS_MESSAGE"
-}
-```
 ##### Delivery reports status
 Below are some of the delivery reports status (STATUS_MESSAGE) that you will receive through the API
 - _DeliveredToTerminal_ : Message has been delivered									- _UserNotExist_ : Number does not exist								- _Insufficient_Balance_ : Insufficient funds at user end
