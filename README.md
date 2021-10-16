@@ -27,8 +27,8 @@ $service_name = "SERVICE_NAME";//The name of the service to use.
 $response = $tm->send_sms($recepients, $message, $apiKey, $service_name);
 
 ------ Send/ Respond to a specific on demand service using link Id ------
-$link_id = "link id";//The link id of the incoming message that you received.
-$response = $tm->send_sms($link_id, $message, $apiKey);
+$linkId = "link id";//The link Id of the incoming message that you received.
+$response = $tm->send_sms($recepients, $message, $apiKey, $linkId);
 ```
 
 ## Response
