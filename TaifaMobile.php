@@ -4,12 +4,22 @@ class TaifaMobile
 	public function __construct()
 	{
 	}
-	public function send_sms($recepients, $message, $apiKey, $service_name = NULL, $linkId = NULL)
+
+	public function send_sms($recepients, $message, $apiKey, $service_name = NULL)
 	{
-		$plaintext = json_encode(array("message" => $message, "recepients" => $recepients, "link_id" => $linkId));
+		$plaintext = json_encode(array("message" => $message, "recepients" => $recepients));
 		$encrypted_message = $this->encrypt($plaintext, $apiKey);
 		$data = ["message" => $encrypted_message, "key" => $apiKey, "service_name" => $service_name];
 		$response = $this->curl_function($data, "sms");
+		return $response;
+	}
+
+	public function reply_sms($linkId, $message, $apiKey)
+	{
+		$plaintext = json_encode(array("message" => $message, "link_id" => $linkId));
+		$encrypted_message = $this->encrypt($plaintext, $apiKey);
+		$data = ["message" => $encrypted_message, "key" => $apiKey];
+		$response = $this->curl_function($data, "reply_sms");
 		return $response;
 	}
 
@@ -21,7 +31,9 @@ class TaifaMobile
 
 	public function curl_function($data, $end_point)
 	{
-		$url = "https://sms.taifamobile.co.ke/clientapi/" . $end_point . "/";
+		//$url = "https://sms.taifamobile.co.ke/clientapi/" . $end_point . "/";
+
+		$url = "http://localhost/taifa/prs/index.php/clientapi/" . $end_point . "/";
 		$content = json_encode($data);
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_HEADER, false);
